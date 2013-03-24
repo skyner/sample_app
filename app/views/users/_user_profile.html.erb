@@ -1,0 +1,8 @@
+<h1>
+  <%= gravatar_for @user %>
+  <%= @user.name %>
+</h1>
+<% if ( params[:action] == 'followers' || params[:action] == 'following' ) %>
+	<span><%= link_to "view my profile", @user %></span>
+	<span><b>Microposts:</b> <%= @user.microposts.count %></span>
+<% end %>

@@ -41,10 +41,10 @@ describe "UserPages" do
 
 		describe "with valid information" do
 			before do
-				fill_in "Name",				 	with: "Example User"
-				fill_in "Email",			 	with: "user@example.com"
-				fill_in "Password",		 	with: "foobar"
-				fill_in "Confirmation",	with: "foobar"
+				fill_in "Name",				 	     with: "Example User"
+				fill_in "Email",			 	     with: "user@example.com"
+				fill_in "Password",		 	     with: "foobar"
+				fill_in "Confirm Password",	 with: "foobar"
 			end
 
 			it "should create a user" do
@@ -228,7 +228,19 @@ describe "UserPages" do
   		it { should have_selector('title', text: full_title('Following')) }
   		it { should have_selector('h3', text: 'Following') }
   		it { should have_link( other_user.name, href: user_path(other_user) ) }
+      it { should have_link("1 following", href: following_user_path(user)) }
+      it { should have_link("0 followers", href: followers_user_path(user)) }
   	end
+
+    describe "followers for user" do
+      before do
+        sign_in user
+        visit followers_user_path(user)
+      end
+
+      it { should have_link("1 following", href: following_user_path(user)) }
+      it { should have_link("0 followers", href: followers_user_path(user)) }
+    end
 
   	describe "followers" do
   		before do
@@ -239,6 +251,8 @@ describe "UserPages" do
   		it { should have_selector('title', text: full_title('Followers')) }
   		it { should have_selector('h3', text: 'Followers') }
   		it { should have_link(user.name, href: user_path(user)) }
+      it { should have_link("0 following", href: following_user_path(other_user)) }
+      it { should have_link("1 followers", href: followers_user_path(other_user)) }
   	end
   end
 end

@@ -158,5 +158,29 @@ describe "AuthenticationPages" do
         specify { response.should redirect_to(root_path) }
       end
     end
+    
+    describe "as signed user" do
+      let(:user){ FactoryGirl.create(:user) }
+
+      before {sign_in user} 
+    
+      describe "redirect when try to visit signup_path" do 
+        before { post signup_path }
+        specify { response.should redirect_to(root_path) }
+      end
+    end
+
+    describe "as signed user as admin" do
+      let(:user){ FactoryGirl.create(:user) }
+
+      before do
+       sign_in user 
+     end
+
+      describe "admin should not delete himself" do
+        before { delete user_path(user) }
+        specify { response.should redirect_to(root_path) }
+      end
+    end
   end
 end

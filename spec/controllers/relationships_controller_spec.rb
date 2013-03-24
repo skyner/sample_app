@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe RelationshipsController do
 	
-	let(:user) { FactoryGirl.create(:user) }
-	let(:other_user) { FactoryGirl.create(:user) }
+	let(:user) { FactoryGirl.create(:user, email: 'wp@wp2.pl') }
+	let(:other_user) { FactoryGirl.create(:user, email: 'wp@wp.pl') }
 
 	before { sign_in user }
 

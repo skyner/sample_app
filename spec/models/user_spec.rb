@@ -165,7 +165,7 @@ describe User do
 
 		describe "status" do
 			let(:unfallowed_post) do
-				FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+				FactoryGirl.create(:micropost, user: FactoryGirl.create(:user, email: "dif@dif.pl"))
 			end
 
 			its(:feed) { should include(newer_micropost) }
@@ -175,9 +175,9 @@ describe User do
 	
 		describe "status" do
 			let(:unfollowed_post) do
-				FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+				FactoryGirl.create(:micropost, user: FactoryGirl.create(:user, email: "dd@we.pl"))
 			end
-			let(:followed_user) { FactoryGirl.create(:user) }
+			let(:followed_user) { FactoryGirl.create(:user, email: "1234@wp.pl") }
 
 			before do
 				@user.follow!(followed_user)
@@ -196,7 +196,7 @@ describe User do
 	end
 
 	describe "following" do
-		let(:other_user) { FactoryGirl.create(:user) }
+		let(:other_user) { FactoryGirl.create(:user, email: '234@wp.pl') }
 		before do
 			@user.save!
 			@user.follow!(other_user)
@@ -215,6 +215,23 @@ describe User do
 		describe "followed_users" do
 			subject { other_user }
 			its(:followers) { should include(@user) }
+		end
+	end
+
+	describe "following associations" do
+		let(:other_user) { FactoryGirl.create(:user, email: "fc@wt.pl") }
+		before do
+			@user.save
+			@user.follow!(other_user)
+		end
+
+		it "should destroy associated relationships" do
+			relationships = @user.relationships.dup
+			@user.destroy
+			relationships.should_not be_empty
+			relationships.each do |relationship|
+				Relationship.find_by_id(relationship.id).should be_nil
+			end
 		end
 	end
 end
